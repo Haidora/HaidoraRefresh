@@ -26,6 +26,9 @@ typedef NS_ENUM(NSInteger, HDRefreshViewPosition)
 @protocol HaidoraRefreshAnimator <NSObject>
 
 @required
+
+@property (nonatomic, assign) HDRefreshViewPosition position;
+
 - (void)startLoadingAnimation;
 - (void)stopLoadingAnimation;
 // when progress > 1 is release state

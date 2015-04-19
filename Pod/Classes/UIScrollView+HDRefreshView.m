@@ -57,7 +57,6 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 - (void)addPullToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
 {
     HDClassicAnimator *animator = [[HDClassicAnimator alloc] init];
-    animator.position = HDRefreshViewPositionTop;
     [self addPullToRefreshWithActionHandler:actionHandler animator:animator];
 }
 
@@ -67,6 +66,7 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
     HDPullToRefreshView *refresh = [[HDPullToRefreshView alloc]
         initWithFrame:CGRectMake(0, -HDRefreshDefaultHeight, CGRectGetWidth(self.bounds),
                                  HDRefreshDefaultHeight)];
+    [animator setPosition:HDRefreshViewPositionTop];
     [self addPullToRefreshWithActionHandler:actionHandler animator:animator refreshView:refresh];
 }
 
@@ -102,7 +102,6 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 - (void)addInfiniteToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
 {
     HDClassicAnimator *animator = [[HDClassicAnimator alloc] init];
-    animator.position = HDRefreshViewPositionBottom;
     [self addInfiniteToRefreshWithActionHandler:actionHandler animator:animator];
 }
 
@@ -112,6 +111,7 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
     HDInfiniteToRefreshView *refresh = [[HDInfiniteToRefreshView alloc]
         initWithFrame:CGRectMake(0, CGRectGetHeight(self.bounds), CGRectGetWidth(self.bounds),
                                  HDRefreshDefaultHeight)];
+    [animator setPosition:HDRefreshViewPositionBottom];
     [self addInfiniteToRefreshWithActionHandler:actionHandler
                                        animator:animator
                                     refreshView:refresh];
