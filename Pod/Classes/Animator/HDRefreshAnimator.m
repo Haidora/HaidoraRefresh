@@ -7,101 +7,6 @@
 //
 
 #import "HDRefreshAnimator.h"
-#import <QuartzCore/QuartzCore.h>
-
-#define kHDBeatAnimatorLayerLoaderHeight 4
-#define kHDBeatAnimatorLayerSeparatorHeight 2
-
-@interface HDBeatAnimator ()
-
-@property (nonatomic, strong) CAShapeLayer *layerLoader;
-@property (nonatomic, strong) CAShapeLayer *layerSeparator;
-
-@end
-
-@implementation HDBeatAnimator
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self)
-    {
-        self.layerLoader = [CAShapeLayer layer];
-        self.layerLoader.lineWidth = kHDBeatAnimatorLayerLoaderHeight;
-        self.layerLoader.lineCap = kCALineCapRound;
-        self.layerLoader.strokeColor =
-            [UIColor colorWithRed:0.165 green:0.264 blue:1.000 alpha:1.000].CGColor;
-        self.layerLoader.strokeEnd = 0;
-
-        self.layerSeparator = [CAShapeLayer layer];
-        self.layerSeparator.lineWidth = kHDBeatAnimatorLayerSeparatorHeight;
-        self.layerSeparator.lineCap = kCALineCapRound;
-        self.layerSeparator.strokeColor = [UIColor colorWithWhite:0.500 alpha:0.300].CGColor;
-        self.layerSeparator.strokeEnd = 1;
-    }
-    return self;
-}
-
-- (void)startLoadingAnimation
-{
-    CABasicAnimation *pathAnimationStart = [CABasicAnimation animationWithKeyPath:@"strokeStart"];
-    pathAnimationStart.duration = 1;
-    pathAnimationStart.repeatCount = HUGE_VALL;
-    pathAnimationStart.autoreverses = YES;
-    pathAnimationStart.fromValue = @(0);
-    pathAnimationStart.toValue = @(0.5);
-    [self.layerLoader addAnimation:pathAnimationStart forKey:@"pathAnimationStart"];
-
-    CABasicAnimation *pathAnimationEnd = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    pathAnimationEnd.duration = 1;
-    pathAnimationEnd.repeatCount = HUGE_VALL;
-    pathAnimationEnd.autoreverses = YES;
-    pathAnimationEnd.fromValue = @(1);
-    pathAnimationEnd.toValue = @(0.5);
-    [self.layerLoader addAnimation:pathAnimationEnd forKey:@"strokEndAnimation"];
-}
-
-- (void)stopLoadingAnimation
-{
-    [self.layerLoader removeAllAnimations];
-}
-
-- (void)changeProgress:(CGFloat)progress
-{
-    self.layerLoader.strokeStart = 1 - progress;
-    self.layerLoader.strokeEnd = progress;
-}
-
-- (void)layoutSubviewsWith:(UIView *)superView
-{
-    // add layer
-    if (self.layerSeparator.superlayer == nil)
-    {
-        [superView.layer addSublayer:self.layerSeparator];
-    }
-    if (self.layerLoader.superlayer == nil)
-    {
-        [superView.layer addSublayer:self.layerLoader];
-    }
-    UIBezierPath *bezierPathLoader = [UIBezierPath bezierPath];
-    [bezierPathLoader moveToPoint:CGPointMake(0, CGRectGetHeight(superView.frame) -
-                                                     kHDBeatAnimatorLayerLoaderHeight)];
-    [bezierPathLoader addLineToPoint:CGPointMake(CGRectGetWidth(superView.frame),
-                                                 CGRectGetHeight(superView.frame) -
-                                                     kHDBeatAnimatorLayerLoaderHeight)];
-
-    UIBezierPath *bezirePathSeparator = [UIBezierPath bezierPath];
-    [bezirePathSeparator moveToPoint:CGPointMake(0, CGRectGetHeight(superView.frame) -
-                                                        kHDBeatAnimatorLayerSeparatorHeight)];
-    [bezirePathSeparator addLineToPoint:CGPointMake(CGRectGetWidth(superView.frame),
-                                                    CGRectGetHeight(superView.frame) -
-                                                        kHDBeatAnimatorLayerSeparatorHeight)];
-
-    self.layerLoader.path = bezierPathLoader.CGPath;
-    self.layerSeparator.path = bezirePathSeparator.CGPath;
-}
-
-@end
 
 @interface HDClassicAnimator ()
 
@@ -154,7 +59,7 @@
 
 - (void)startLoadingAnimation
 {
-    self.titleLable.text = @"Loading ...";
+    self.titleLable.text = NSLocalizedStringFromTable(@"Loading...", HDRefreshBundleName, @"");
     [UIView animateWithDuration:0.3
         animations:^{
           self.arrowImage.hidden = YES;
@@ -185,17 +90,30 @@
 
 - (void)changeProgress:(CGFloat)progress
 {
-//    NSLog(@"%@", @(progress));
-    CGAffineTransform transform = CGAffineTransformIdentity;
+    CGAffineTransform transformPull;
+    CGAffineTransform transformRefresh;
+    CGAffineTransform transform;
+    if (_position == HDRefreshViewPositionTop)
+    {
+        transformPull = CGAffineTransformIdentity;
+        transformRefresh = CGAffineTransformMakeRotation(M_PI);
+    }
+    else if (_position == HDRefreshViewPositionBottom)
+    {
+        transformPull = CGAffineTransformMakeRotation(M_PI);
+        transformRefresh = CGAffineTransformIdentity;
+    }
     if (progress > 1)
     {
-        self.titleLable.text = @"Realse to Refresh....";
-        transform = CGAffineTransformMakeRotation(M_PI);
+        self.titleLable.text =
+            NSLocalizedStringFromTable(@"Realse to Refresh...", HDRefreshBundleName, @"");
+        transform = transformRefresh;
     }
     else
     {
-        self.titleLable.text = @"Pull to Refresh....";
-        transform = CGAffineTransformIdentity;
+        self.titleLable.text =
+            NSLocalizedStringFromTable(@"Pull to Refresh...", HDRefreshBundleName, @"");
+        transform = transformPull;
     }
     [UIView animateWithDuration:0.3
                      animations:^{
@@ -206,7 +124,6 @@
 - (void)layoutSubviewsWith:(UIView *)superView
 {
     CGFloat superHeight = CGRectGetHeight(superView.frame);
-    //    CGFloat superWidth = CGRectGetWidth(superView.frame);
     if (self.titleLable.superview == nil)
     {
         self.titleLable.frame = superView.bounds;

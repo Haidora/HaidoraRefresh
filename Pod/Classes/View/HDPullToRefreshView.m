@@ -81,25 +81,19 @@ static char *HDPullTORefreshKVOContext;
 - (void)adjustWithContentOffSetWith:(UIScrollView *)scrollView
 {
     CGFloat offSetWithInsets = scrollView.contentOffset.y + _scrollViewInsetsDefaultValue.top;
+    if (offSetWithInsets >= _scrollViewInsetsDefaultValue.top)
+    {
+        return;
+    }
     if (!scrollView.refreshLoading)
     {
-        // pull to refresh state
-        if (offSetWithInsets > -CGRectGetHeight(self.frame))
+        if (scrollView.isDragging)
         {
-            [self.animator changeProgress:(-offSetWithInsets / CGRectGetHeight(self.frame))];
+            [self.animator changeProgress:(-offSetWithInsets / CGRectGetHeight(self.bounds))];
         }
-        // realse to refresh state
-        else if (offSetWithInsets <= (-CGRectGetHeight(self.frame)))
+        else if (offSetWithInsets <= (-CGRectGetHeight(self.bounds) + 7))
         {
-            // start refresh
-            if (scrollView.isDragging == NO)
-            {
-                [self startAnimating];
-            }
-            else
-            {
-                [self.animator changeProgress:(-offSetWithInsets / CGRectGetHeight(self.frame))];
-            }
+            [self startAnimating];
         }
     }
 }

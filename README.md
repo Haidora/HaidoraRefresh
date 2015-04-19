@@ -1,19 +1,23 @@
 # HaidoraRefresh
-
-[![CI Status](http://img.shields.io/travis/mrdaios/HaidoraRefresh.svg?style=flat)](https://travis-ci.org/mrdaios/HaidoraRefresh)
-[![Version](https://img.shields.io/cocoapods/v/HaidoraRefresh.svg?style=flat)](http://cocoadocs.org/docsets/HaidoraRefresh)
-[![License](https://img.shields.io/cocoapods/l/HaidoraRefresh.svg?style=flat)](http://cocoadocs.org/docsets/HaidoraRefresh)
-[![Platform](https://img.shields.io/cocoapods/p/HaidoraRefresh.svg?style=flat)](http://cocoadocs.org/docsets/HaidoraRefresh)
+通用的下拉刷新。
 
 ## Usage
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+    #import <HaidoraRefresh.h>
+    
+    //下拉刷新
+    //添加下拉刷新回调
+    [self.scrollView addPullToRefreshWithActionHandler:nil];
+    //添加下拉刷新并设置自定义动画
+    [self.scrollView addPullToRefreshWithActionHandler:nil animator:nil];
+    
+## Animator
 
-## Requirements
+更多自定义Animator[HaidoraRefreshExtension](https://github.com/Haidora/HaidoraRefreshExtension)
 
 ## Installation
 
-HaidoraRefresh is available through [CocoaPods](http://cocoapods.org). To install
+HaidoraRefresh is available through [HaidoraPods](https://github.com/Haidora/HaidoraPods). To install
 it, simply add the following line to your Podfile:
 
     pod "HaidoraRefresh"

@@ -56,16 +56,17 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 
 - (void)addPullToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
 {
-    [self addPullToRefreshWithActionHandler:actionHandler
-                                   animator:[[HDClassicAnimator alloc] init]];
+    HDClassicAnimator *animator = [[HDClassicAnimator alloc] init];
+    animator.position = HDRefreshViewPositionTop;
+    [self addPullToRefreshWithActionHandler:actionHandler animator:animator];
 }
 
 - (void)addPullToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
                                  animator:(id<HaidoraRefreshAnimator>)animator
 {
     HDPullToRefreshView *refresh = [[HDPullToRefreshView alloc]
-        initWithFrame:CGRectMake(0, -HaidoraPullToRefreshDefaultHeight, CGRectGetWidth(self.bounds),
-                                 HaidoraPullToRefreshDefaultHeight)];
+        initWithFrame:CGRectMake(0, -HDRefreshDefaultHeight, CGRectGetWidth(self.bounds),
+                                 HDRefreshDefaultHeight)];
     [self addPullToRefreshWithActionHandler:actionHandler animator:animator refreshView:refresh];
 }
 
@@ -100,8 +101,9 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 
 - (void)addInfiniteToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
 {
-    [self addInfiniteToRefreshWithActionHandler:actionHandler
-                                       animator:[[HDClassicAnimator alloc] init]];
+    HDClassicAnimator *animator = [[HDClassicAnimator alloc] init];
+    animator.position = HDRefreshViewPositionBottom;
+    [self addInfiniteToRefreshWithActionHandler:actionHandler animator:animator];
 }
 
 - (void)addInfiniteToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
@@ -109,7 +111,7 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 {
     HDInfiniteToRefreshView *refresh = [[HDInfiniteToRefreshView alloc]
         initWithFrame:CGRectMake(0, CGRectGetHeight(self.bounds), CGRectGetWidth(self.bounds),
-                                 HaidoraPullToRefreshDefaultHeight)];
+                                 HDRefreshDefaultHeight)];
     [self addInfiniteToRefreshWithActionHandler:actionHandler
                                        animator:animator
                                     refreshView:refresh];

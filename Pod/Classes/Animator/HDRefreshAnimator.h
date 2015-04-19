@@ -9,10 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "HaidoraRefreshDefine.h"
 
-@interface HDBeatAnimator : NSObject <HaidoraRefreshAnimator>
-
-@end
-
 @interface HDClassicAnimator : NSObject <HaidoraRefreshAnimator>
+
+@property (nonatomic, assign) HDRefreshViewPosition position;
 
 @end

@@ -9,21 +9,28 @@
 #ifndef Pods_HaidoraRefreshDefine_h
 #define Pods_HaidoraRefreshDefine_h
 
-typedef void (^HDRefreshBlock)(void);
-static CGFloat HaidoraPullToRefreshDefaultHeight = 55.0;
 #define HDRefreshViewContentOffSetKeyPath @"contentOffset"
 #define HDRefreshViewContentSizeKeyPath @"contentSize"
 
-//刷新动画相关协议
+typedef void (^HDRefreshBlock)(void);
+
+static CGFloat HDRefreshDefaultHeight = 55.0;
+static NSString *HDRefreshBundleName = @"HaidoraRefresh";
+
+typedef NS_ENUM(NSInteger, HDRefreshViewPosition)
+{
+    HDRefreshViewPositionTop = 0,
+    HDRefreshViewPositionBottom
+};
+
 @protocol HaidoraRefreshAnimator <NSObject>
 
 @required
-
 - (void)startLoadingAnimation;
 - (void)stopLoadingAnimation;
 // when progress > 1 is release state
 - (void)changeProgress:(CGFloat)progress;
-// add custom view
+// add custom sub view
 - (void)layoutSubviewsWith:(UIView *)superView;
 
 @end

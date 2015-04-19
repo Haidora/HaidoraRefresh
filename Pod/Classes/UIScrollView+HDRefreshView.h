@@ -22,9 +22,6 @@
 - (void)addPullToRefreshWithActionHandler:(HDRefreshBlock)actionHandler;
 - (void)addPullToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
                                  animator:(id<HaidoraRefreshAnimator>)animator;
-- (void)addPullToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
-                                 animator:(id<HaidoraRefreshAnimator>)animator
-                              refreshView:(HDPullToRefreshView *)refreshView;
 - (void)triggerPullToRefresh;
 - (void)stopPullRefresh;
 
@@ -33,9 +30,6 @@
 - (void)addInfiniteToRefreshWithActionHandler:(HDRefreshBlock)actionHandler;
 - (void)addInfiniteToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
                                      animator:(id<HaidoraRefreshAnimator>)animator;
-- (void)addInfiniteToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
-                                     animator:(id<HaidoraRefreshAnimator>)animator
-                                  refreshView:(HDInfiniteToRefreshView *)refreshView;
 - (void)triggerInfiniteToRefresh;
 - (void)stopInfiniteRefresh;
 

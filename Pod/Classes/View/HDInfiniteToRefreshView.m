@@ -119,24 +119,14 @@ static char *HDInfiniteToRefreshKVOContext;
         {
             return;
         }
-        // pull to refresh state
-        if (offSetWithInsetY < (CGRectGetHeight(self.bounds) + visibleOffSetY))
+        if (superView.isDragging)
         {
             [self.animator
                 changeProgress:((offSetWithInsetY - visibleOffSetY) / CGRectGetHeight(self.frame))];
         }
-        else
+        else if ((offSetWithInsetY + 7) >= (CGRectGetHeight(self.bounds) + visibleOffSetY))
         {
-            NSLog(@"drag:%@", @(superView.dragging));
-            if (superView.dragging == NO)
-            {
-                [self startAnimating];
-            }
-            else
-            {
-                [self.animator changeProgress:((offSetWithInsetY - visibleOffSetY) /
-                                               CGRectGetHeight(self.frame))];
-            }
+            [self startAnimating];
         }
     }
 }
