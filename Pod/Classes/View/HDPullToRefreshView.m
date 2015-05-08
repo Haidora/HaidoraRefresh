@@ -125,7 +125,6 @@ static char *HDPullTORefreshKVOContext;
 {
     UIScrollView *scrollView = (UIScrollView *)self.superview;
     scrollView.refreshLoading = NO;
-    [self.animator stopLoadingAnimation];
     [UIView animateWithDuration:0.3
         animations:^{
           scrollView.contentInset = _scrollViewInsetsDefaultValue;
@@ -133,7 +132,7 @@ static char *HDPullTORefreshKVOContext;
         completion:^(BOOL finished) {
           if (finished)
           {
-              [self.animator changeProgress:0];
+              [self.animator stopLoadingAnimation];
           }
         }];
 }
