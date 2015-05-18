@@ -51,7 +51,6 @@
     {
         _activityView = [[UIActivityIndicatorView alloc]
             initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        _activityView.frame = self.arrowImage.frame;
         _activityView.autoresizingMask = self.arrowImage.autoresizingMask;
     }
     return _activityView;
@@ -138,6 +137,7 @@
     if (self.activityView.superview == nil)
     {
         self.activityView.hidden = YES;
+        self.activityView.frame = self.arrowImage.frame;
         [superView addSubview:self.activityView];
     }
 }
