@@ -12,7 +12,8 @@
 
 @interface UIScrollView (HDRefreshView)
 
-@property (nonatomic, assign) BOOL refreshLoading;
+@property (nonatomic, assign) BOOL pullRefreshLoading;
+@property (nonatomic, assign) BOOL infiniteRefreshLoading;
 
 @property (nonatomic, strong, readonly) HDPullToRefreshView *pullToRefreshView;
 @property (nonatomic, strong, readonly) HDInfiniteToRefreshView *infiniteToRefreshView;

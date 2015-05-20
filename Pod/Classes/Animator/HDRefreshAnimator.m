@@ -82,7 +82,7 @@
         completion:^(BOOL finished) {
           if (finished)
           {
-              [self.activityView startAnimating];
+              [self.activityView stopAnimating];
           }
         }];
 }

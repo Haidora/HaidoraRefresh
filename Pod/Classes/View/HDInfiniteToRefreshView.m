@@ -111,7 +111,7 @@ static char *HDInfiniteToRefreshKVOContext;
 - (void)adjustStateWithContentOffset
 {
     UIScrollView *superView = (UIScrollView *)self.superview;
-    if (superView && !superView.refreshLoading)
+    if (superView && !superView.infiniteRefreshLoading)
     {
         CGFloat offSetWithInsetY = superView.contentOffset.y + _scrollViewInsetsDefaultValue.top;
         CGFloat visibleOffSetY = [self heightForRefreshShow];
@@ -160,7 +160,7 @@ static char *HDInfiniteToRefreshKVOContext;
 - (void)startAnimating
 {
     UIScrollView *scrollView = (UIScrollView *)self.superview;
-    scrollView.refreshLoading = YES;
+    scrollView.infiniteRefreshLoading = YES;
     CGFloat bottom = CGRectGetHeight(self.bounds) + _scrollViewInsetsDefaultValue.bottom;
     CGFloat deltaH = [self heightForContentViewInvisible];
     if (deltaH < 0)
@@ -185,7 +185,7 @@ static char *HDInfiniteToRefreshKVOContext;
 - (void)stopAnimating
 {
     UIScrollView *scrollView = (UIScrollView *)self.superview;
-    scrollView.refreshLoading = NO;
+    scrollView.infiniteRefreshLoading = NO;
     UIEdgeInsets insets = scrollView.contentInset;
     insets.bottom = _scrollViewInsetsDefaultValue.bottom;
     [self.animator stopLoadingAnimation];

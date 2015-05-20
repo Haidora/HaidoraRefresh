@@ -11,25 +11,38 @@
 #import "HaidoraRefreshDefine.h"
 #import "HDRefreshAnimator.h"
 
-static char *kHaidoraRefreshLoading = "kHaidoraRefreshLoading";
+static char *kHaidoraPullRefreshLoading = "kHaidoraPullRefreshLoading";
+static char *kHaidoraInfiniteTRefreshLoading = "kHaidoraInfiniteTRefreshLoading";
 static char *kHaidoraPullToRefreshView = "kHaidoraPullToRefreshView";
 static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 
 @implementation UIScrollView (HDRefreshView)
 
-@dynamic refreshLoading;
+@dynamic pullRefreshLoading;
+@dynamic infiniteRefreshLoading;
 @dynamic pullToRefreshView;
 @dynamic infiniteToRefreshView;
 
-- (void)setRefreshLoading:(BOOL)refreshLoading
+- (void)setPullRefreshLoading:(BOOL)pullRefreshLoading
 {
-    objc_setAssociatedObject(self, kHaidoraRefreshLoading, @(refreshLoading),
+    objc_setAssociatedObject(self, kHaidoraPullRefreshLoading, @(pullRefreshLoading),
                              OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (BOOL)refreshLoading
+- (BOOL)pullRefreshLoading
 {
-    return [objc_getAssociatedObject(self, kHaidoraRefreshLoading) boolValue];
+    return [objc_getAssociatedObject(self, kHaidoraPullRefreshLoading) boolValue];
+}
+
+- (void)setInfiniteRefreshLoading:(BOOL)infiniteRefreshLoading
+{
+    objc_setAssociatedObject(self, kHaidoraInfiniteTRefreshLoading, @(infiniteRefreshLoading),
+                             OBJC_ASSOCIATION_ASSIGN);
+}
+
+- (BOOL)infiniteRefreshLoading
+{
+    return [objc_getAssociatedObject(self, kHaidoraInfiniteTRefreshLoading) boolValue];
 }
 
 - (void)setPullToRefreshView:(HDPullToRefreshView *)pullToRefreshView
@@ -85,7 +98,7 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 
 - (void)triggerPullToRefresh
 {
-    if (!self.refreshLoading)
+    if (!self.pullRefreshLoading)
     {
         [self.pullToRefreshView startAnimating];
     }
@@ -93,7 +106,7 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 
 - (void)stopPullRefresh
 {
-    if (self.refreshLoading)
+    if (self.pullRefreshLoading)
     {
         [self.pullToRefreshView stopAnimating];
     }
@@ -133,7 +146,7 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 
 - (void)triggerInfiniteToRefresh
 {
-    if (!self.refreshLoading)
+    if (!self.infiniteRefreshLoading)
     {
         [self.infiniteToRefreshView startAnimating];
     }
@@ -141,7 +154,7 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 
 - (void)stopInfiniteRefresh
 {
-    if (self.refreshLoading)
+    if (self.infiniteRefreshLoading)
     {
         [self.infiniteToRefreshView stopAnimating];
     }

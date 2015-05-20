@@ -85,7 +85,7 @@ static char *HDPullTORefreshKVOContext;
     {
         return;
     }
-    if (!scrollView.refreshLoading)
+    if (!scrollView.pullRefreshLoading)
     {
         if (scrollView.isDragging)
         {
@@ -104,7 +104,7 @@ static char *HDPullTORefreshKVOContext;
 - (void)startAnimating
 {
     UIScrollView *scrollView = (UIScrollView *)self.superview;
-    scrollView.refreshLoading = YES;
+    scrollView.pullRefreshLoading = YES;
     UIEdgeInsets insets = scrollView.contentInset;
     insets.top += CGRectGetHeight(self.frame);
     [self.animator startLoadingAnimation];
@@ -124,7 +124,8 @@ static char *HDPullTORefreshKVOContext;
 - (void)stopAnimating
 {
     UIScrollView *scrollView = (UIScrollView *)self.superview;
-    scrollView.refreshLoading = NO;
+    scrollView.pullRefreshLoading = NO;
+    [self.animator stopLoadingAnimation];
     [UIView animateWithDuration:0.3
         animations:^{
           scrollView.contentInset = _scrollViewInsetsDefaultValue;
@@ -132,7 +133,7 @@ static char *HDPullTORefreshKVOContext;
         completion:^(BOOL finished) {
           if (finished)
           {
-              [self.animator stopLoadingAnimation];
+              [self.animator changeProgress:0];
           }
         }];
 }
