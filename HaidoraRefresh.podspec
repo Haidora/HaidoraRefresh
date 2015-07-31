@@ -1,8 +1,9 @@
 Pod::Spec.new do |s|
   s.name             = "HaidoraRefresh"
-  s.version          = "0.1"
-  s.summary          = "A general of refresh."
+  s.version          = "0.1.0"
+  s.summary          = "通用的下拉刷新."
   s.description      = <<-DESC
+                      通用的下拉刷新,可自定义刷新动画.
                        DESC
   s.homepage         = "https://github.com/Haidora/HaidoraRefresh"
   s.license          = 'MIT'

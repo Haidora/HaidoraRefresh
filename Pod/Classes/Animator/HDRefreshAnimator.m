@@ -105,7 +105,7 @@
     if (progress > 1)
     {
         self.titleLable.text =
-            NSLocalizedStringFromTable(@"Realse to Refresh...", HDRefreshBundleName, @"");
+            NSLocalizedStringFromTable(@"Release to Refresh...", HDRefreshBundleName, @"");
         transform = transformRefresh;
     }
     else
