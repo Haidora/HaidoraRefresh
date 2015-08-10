@@ -8,64 +8,20 @@
 
 #import "UIScrollView+HDRefreshView.h"
 #import <objc/runtime.h>
-#import "HaidoraRefreshDefine.h"
+#import "HDPullToRefreshView.h"
+#import "HDInfiniteToRefreshView.h"
+#import "UIScrollView+HDRefreshPrivate.h"
 #import "HDRefreshAnimator.h"
 
-static char *kHaidoraPullRefreshLoading = "kHaidoraPullRefreshLoading";
-static char *kHaidoraInfiniteTRefreshLoading = "kHaidoraInfiniteTRefreshLoading";
 static char *kHaidoraPullToRefreshView = "kHaidoraPullToRefreshView";
-static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 
-@implementation UIScrollView (HDRefreshView)
+@implementation UIScrollView (HDPullRefreshView)
 
-@dynamic pullRefreshLoading;
-@dynamic infiniteRefreshLoading;
+@dynamic showPullRefreshView;
 @dynamic pullToRefreshView;
-@dynamic infiniteToRefreshView;
 
-- (void)setPullRefreshLoading:(BOOL)pullRefreshLoading
-{
-    objc_setAssociatedObject(self, kHaidoraPullRefreshLoading, @(pullRefreshLoading),
-                             OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (BOOL)pullRefreshLoading
-{
-    return [objc_getAssociatedObject(self, kHaidoraPullRefreshLoading) boolValue];
-}
-
-- (void)setInfiniteRefreshLoading:(BOOL)infiniteRefreshLoading
-{
-    objc_setAssociatedObject(self, kHaidoraInfiniteTRefreshLoading, @(infiniteRefreshLoading),
-                             OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (BOOL)infiniteRefreshLoading
-{
-    return [objc_getAssociatedObject(self, kHaidoraInfiniteTRefreshLoading) boolValue];
-}
-
-- (void)setPullToRefreshView:(HDPullToRefreshView *)pullToRefreshView
-{
-    objc_setAssociatedObject(self, kHaidoraPullToRefreshView, pullToRefreshView,
-                             OBJC_ASSOCIATION_RETAIN);
-}
-
-- (HDPullToRefreshView *)pullToRefreshView
-{
-    return objc_getAssociatedObject(self, kHaidoraPullToRefreshView);
-}
-
-- (void)setInfiniteToRefreshView:(HDInfiniteToRefreshView *)infiniteToRefreshView
-{
-    objc_setAssociatedObject(self, kHaidoraInfiniteToRefreshView, infiniteToRefreshView,
-                             OBJC_ASSOCIATION_RETAIN);
-}
-
-- (HDInfiniteToRefreshView *)infiniteToRefreshView
-{
-    return objc_getAssociatedObject(self, kHaidoraInfiniteToRefreshView);
-}
+#pragma mark
+#pragma mark Action
 
 - (void)addPullToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
 {
@@ -93,6 +49,7 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
         self.pullToRefreshView.animator = animator;
         self.pullToRefreshView.action = actionHandler;
         [self addSubview:self.pullToRefreshView];
+        self.showPullRefreshView = YES;
     }
 }
 
@@ -111,6 +68,62 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
         [self.pullToRefreshView stopAnimating];
     }
 }
+
+#pragma mark
+#pragma mark Getter/Setter
+
+- (void)setPullToRefreshView:(HDPullToRefreshView *)pullToRefreshView
+{
+    objc_setAssociatedObject(self, kHaidoraPullToRefreshView, pullToRefreshView,
+                             OBJC_ASSOCIATION_RETAIN);
+}
+
+- (HDPullToRefreshView *)pullToRefreshView
+{
+    return objc_getAssociatedObject(self, kHaidoraPullToRefreshView);
+}
+
+- (void)setShowPullRefreshView:(BOOL)showPullRefreshView
+{
+    self.pullToRefreshView.hidden = !showPullRefreshView;
+    if (!showPullRefreshView)
+    {
+        if (self.pullToRefreshView.isObserving)
+        {
+            [self removeObserver:self.pullToRefreshView
+                      forKeyPath:HDRefreshViewContentOffSetKeyPath];
+            self.pullToRefreshView.isObserving = NO;
+        }
+    }
+    else
+    {
+        if (!self.pullToRefreshView.isObserving)
+        {
+            [self addObserver:self.pullToRefreshView
+                   forKeyPath:HDRefreshViewContentOffSetKeyPath
+                      options:NSKeyValueObservingOptionInitial
+                      context:HDPullTORefreshKVOContext];
+            self.pullToRefreshView.isObserving = YES;
+        }
+    }
+}
+
+- (BOOL)showPullRefreshView
+{
+    return !self.pullToRefreshView.hidden;
+}
+
+@end
+
+static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
+
+@implementation UIScrollView (HDInfiniteRefreshView)
+
+@dynamic infiniteToRefreshView;
+@dynamic showInfiniteRefreshView;
+
+#pragma mark
+#pragma mark Action
 
 - (void)addInfiniteToRefreshWithActionHandler:(HDRefreshBlock)actionHandler
 {
@@ -137,10 +150,10 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
     if (self.infiniteToRefreshView == nil)
     {
         self.infiniteToRefreshView = refreshView;
-
         self.infiniteToRefreshView.animator = animator;
         self.infiniteToRefreshView.action = actionHandler;
         [self addSubview:self.infiniteToRefreshView];
+        self.showInfiniteRefreshView = YES;
     }
 }
 
@@ -158,6 +171,58 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
     {
         [self.infiniteToRefreshView stopAnimating];
     }
+}
+
+#pragma mark
+#pragma mark Getter/Setter
+
+- (void)setInfiniteToRefreshView:(HDInfiniteToRefreshView *)infiniteToRefreshView
+{
+    objc_setAssociatedObject(self, kHaidoraInfiniteToRefreshView, infiniteToRefreshView,
+                             OBJC_ASSOCIATION_RETAIN);
+}
+
+- (HDInfiniteToRefreshView *)infiniteToRefreshView
+{
+    return objc_getAssociatedObject(self, kHaidoraInfiniteToRefreshView);
+}
+
+- (void)setShowInfiniteRefreshView:(BOOL)showInfiniteRefreshView
+{
+    self.infiniteToRefreshView.hidden = !showInfiniteRefreshView;
+    if (!showInfiniteRefreshView)
+    {
+        if (self.infiniteToRefreshView.isObserving)
+        {
+            [self removeObserver:self.infiniteToRefreshView
+                      forKeyPath:HDRefreshViewContentOffSetKeyPath
+                         context:HDInfiniteToRefreshKVOContext];
+            [self removeObserver:self.infiniteToRefreshView
+                      forKeyPath:HDRefreshViewContentSizeKeyPath
+                         context:HDInfiniteToRefreshKVOContext];
+            self.infiniteToRefreshView.isObserving = NO;
+        }
+    }
+    else
+    {
+        if (!self.infiniteToRefreshView.isObserving)
+        {
+            [self addObserver:self.infiniteToRefreshView
+                   forKeyPath:HDRefreshViewContentOffSetKeyPath
+                      options:NSKeyValueObservingOptionInitial
+                      context:HDInfiniteToRefreshKVOContext];
+            [self addObserver:self.infiniteToRefreshView
+                   forKeyPath:HDRefreshViewContentSizeKeyPath
+                      options:NSKeyValueObservingOptionInitial
+                      context:HDInfiniteToRefreshKVOContext];
+            self.infiniteToRefreshView.isObserving = YES;
+        }
+    }
+}
+
+- (BOOL)showInfiniteRefreshView
+{
+    return !self.infiniteToRefreshView.hidden;
 }
 
 @end

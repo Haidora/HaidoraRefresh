@@ -28,6 +28,8 @@
         _titleLable.textColor = [UIColor darkGrayColor];
         _titleLable.backgroundColor = [UIColor clearColor];
         _titleLable.textAlignment = NSTextAlignmentCenter;
+        _titleLable.text =
+            NSLocalizedStringFromTable(@"Pull to Refresh...", HDRefreshBundleName, @"");
     }
     return _titleLable;
 }

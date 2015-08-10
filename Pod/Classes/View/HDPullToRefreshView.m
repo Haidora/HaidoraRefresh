@@ -7,9 +7,8 @@
 //
 
 #import "HDPullToRefreshView.h"
-#import "UIScrollView+HDRefreshView.h"
+#import "UIScrollView+HDRefreshPrivate.h"
 
-static char *HDPullTORefreshKVOContext;
 //旋转的支持
 @interface HDPullToRefreshView ()
 {
@@ -39,15 +38,8 @@ static char *HDPullTORefreshKVOContext;
 
 - (void)willMoveToSuperview:(UIView *)newSuperview __attribute__((objc_requires_super))
 {
-    [self.superview removeObserver:self
-                        forKeyPath:HDRefreshViewContentOffSetKeyPath
-                           context:&HDPullTORefreshKVOContext];
     if (newSuperview != nil && [newSuperview isKindOfClass:[UIScrollView class]])
     {
-        [newSuperview addObserver:self
-                       forKeyPath:HDRefreshViewContentOffSetKeyPath
-                          options:NSKeyValueObservingOptionInitial
-                          context:&HDPullTORefreshKVOContext];
         _scrollViewInsetsDefaultValue = ((UIScrollView *)newSuperview).contentInset;
     }
 }
@@ -57,7 +49,7 @@ static char *HDPullTORefreshKVOContext;
                         change:(NSDictionary *)change
                        context:(void *)context __attribute__((objc_requires_super))
 {
-    if (context == &HDPullTORefreshKVOContext)
+    if (context == HDPullTORefreshKVOContext)
     {
         UIScrollView *scrollView = (UIScrollView *)self.superview;
         if ([keyPath isEqualToString:HDRefreshViewContentOffSetKeyPath] && object == scrollView)
@@ -85,7 +77,7 @@ static char *HDPullTORefreshKVOContext;
     {
         return;
     }
-    if (!scrollView.pullRefreshLoading)
+    if (!scrollView.pullRefreshLoading && !scrollView.infiniteRefreshLoading)
     {
         if (scrollView.isDragging)
         {

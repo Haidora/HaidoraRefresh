@@ -20,23 +20,27 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    __weak typeof(self) myself = self;
     _count = 5;
     self.tableView.tableFooterView = [[UIView alloc] init];
     [self.tableView addPullToRefreshWithActionHandler:^{
-      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)),
+      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                      dispatch_get_main_queue(), ^{
-                       [self.tableView stopPullRefresh];
+                       [myself.tableView stopPullRefresh];
                        _count = 5;
-                       [self.tableView reloadData];
+                       [myself.tableView reloadData];
+                       //                       myself.tableView.showPullRefreshView = NO;
+//                       myself.tableView.showInfiniteRefreshView = YES;
                      });
     }];
 
     [self.tableView addInfiniteToRefreshWithActionHandler:^{
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)),
                      dispatch_get_main_queue(), ^{
-                       [self.tableView stopInfiniteRefresh];
+                       [myself.tableView stopInfiniteRefresh];
                        _count += 5;
-                       [self.tableView reloadData];
+                       [myself.tableView reloadData];
+//                       myself.tableView.showInfiniteRefreshView = NO;
                      });
     }];
 }

@@ -7,16 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HDPullToRefreshView.h"
-#import "HDInfiniteToRefreshView.h"
+#import "HaidoraRefreshDefine.h"
 
-@interface UIScrollView (HDRefreshView)
+@class HDPullToRefreshView;
+@class HDInfiniteToRefreshView;
 
-@property (nonatomic, assign) BOOL pullRefreshLoading;
-@property (nonatomic, assign) BOOL infiniteRefreshLoading;
+@interface UIScrollView (HDPullRefreshView)
 
 @property (nonatomic, strong, readonly) HDPullToRefreshView *pullToRefreshView;
-@property (nonatomic, strong, readonly) HDInfiniteToRefreshView *infiniteToRefreshView;
+@property (nonatomic, assign) BOOL showPullRefreshView;
 
 #pragma mark
 #pragma mark Pull to Refresh
@@ -25,6 +24,13 @@
                                  animator:(id<HaidoraRefreshAnimator>)animator;
 - (void)triggerPullToRefresh;
 - (void)stopPullRefresh;
+
+@end
+
+@interface UIScrollView (HDInfiniteRefreshView)
+
+@property (nonatomic, strong, readonly) HDInfiniteToRefreshView *infiniteToRefreshView;
+@property (nonatomic, assign) BOOL showInfiniteRefreshView;
 
 #pragma mark
 #pragma mark Infinite to Refresh

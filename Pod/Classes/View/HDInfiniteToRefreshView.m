@@ -7,9 +7,8 @@
 //
 
 #import "HDInfiniteToRefreshView.h"
-#import "UIScrollView+HDRefreshView.h"
+#import "UIScrollView+HDRefreshPrivate.h"
 
-static char *HDInfiniteToRefreshKVOContext;
 //旋转的支持
 @interface HDInfiniteToRefreshView ()
 {
@@ -41,23 +40,8 @@ static char *HDInfiniteToRefreshKVOContext;
 
 - (void)willMoveToSuperview:(UIView *)newSuperview __attribute__((objc_requires_super))
 {
-    [self.superview removeObserver:self
-                        forKeyPath:HDRefreshViewContentOffSetKeyPath
-                           context:&HDInfiniteToRefreshKVOContext];
-    [self.superview removeObserver:self
-                        forKeyPath:HDRefreshViewContentSizeKeyPath
-                           context:&HDInfiniteToRefreshKVOContext];
-
     if (newSuperview != nil && [newSuperview isKindOfClass:[UIScrollView class]])
     {
-        [newSuperview addObserver:self
-                       forKeyPath:HDRefreshViewContentOffSetKeyPath
-                          options:NSKeyValueObservingOptionInitial
-                          context:&HDInfiniteToRefreshKVOContext];
-        [newSuperview addObserver:self
-                       forKeyPath:HDRefreshViewContentSizeKeyPath
-                          options:NSKeyValueObservingOptionInitial
-                          context:&HDInfiniteToRefreshKVOContext];
         _scrollViewInsetsDefaultValue = ((UIScrollView *)newSuperview).contentInset;
         _scrollView = (UIScrollView *)newSuperview;
     }
@@ -68,12 +52,11 @@ static char *HDInfiniteToRefreshKVOContext;
                         change:(NSDictionary *)change
                        context:(void *)context __attribute__((objc_requires_super))
 {
-    if (context == &HDInfiniteToRefreshKVOContext)
+    if (context == HDInfiniteToRefreshKVOContext)
     {
         UIScrollView *scrollView = (UIScrollView *)self.superview;
         if (object == scrollView)
         {
-            scrollView = object;
             if ([keyPath isEqualToString:HDRefreshViewContentOffSetKeyPath])
             {
                 [self adjustStateWithContentOffset];
@@ -111,7 +94,7 @@ static char *HDInfiniteToRefreshKVOContext;
 - (void)adjustStateWithContentOffset
 {
     UIScrollView *superView = (UIScrollView *)self.superview;
-    if (superView && !superView.infiniteRefreshLoading)
+    if (superView && !superView.infiniteRefreshLoading && !superView.pullRefreshLoading)
     {
         CGFloat offSetWithInsetY = superView.contentOffset.y + _scrollViewInsetsDefaultValue.top;
         CGFloat visibleOffSetY = [self heightForRefreshShow];

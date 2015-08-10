@@ -17,6 +17,9 @@ typedef void (^HDRefreshBlock)(void);
 static CGFloat HDRefreshDefaultHeight = 55.0;
 static NSString *HDRefreshBundleName = @"HaidoraRefresh";
 
+static char *HDPullTORefreshKVOContext = "HDPullTORefreshKVOContext";
+static char *HDInfiniteToRefreshKVOContext = "HDInfiniteToRefreshKVOContext";
+
 typedef NS_ENUM(NSInteger, HDRefreshViewPosition)
 {
     HDRefreshViewPositionTop = 0,
