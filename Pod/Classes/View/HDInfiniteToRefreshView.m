@@ -40,10 +40,26 @@
 
 - (void)willMoveToSuperview:(UIView *)newSuperview __attribute__((objc_requires_super))
 {
+    [super willMoveToSuperview:newSuperview];
     if (newSuperview != nil && [newSuperview isKindOfClass:[UIScrollView class]])
     {
         _scrollViewInsetsDefaultValue = ((UIScrollView *)newSuperview).contentInset;
         _scrollView = (UIScrollView *)newSuperview;
+    }
+    else if (newSuperview == nil && [self.superview isKindOfClass:[UIScrollView class]])
+    {
+        // https://github.com/samvermette/SVPullToRefresh/blob/master/SVPullToRefresh/UIScrollView%2BSVPullToRefresh.m#L196
+        // use self.superview, not self.scrollView. Why self.scrollView == nil here?
+        UIScrollView *scrollView = (UIScrollView *)self.superview;
+        if (YES)
+        {
+            if (self.isObserving)
+            {
+                [scrollView removeObserver:self forKeyPath:HDRefreshViewContentOffSetKeyPath];
+                [scrollView removeObserver:self forKeyPath:HDRefreshViewContentSizeKeyPath];
+                self.isObserving = NO;
+            }
+        }
     }
 }
 
