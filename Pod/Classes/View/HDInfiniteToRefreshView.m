@@ -123,9 +123,17 @@
             [self.animator
                 changeProgress:((offSetWithInsetY - visibleOffSetY) / CGRectGetHeight(self.frame))];
         }
-        else if ((offSetWithInsetY + 7) >= (CGRectGetHeight(self.bounds) + visibleOffSetY))
+        else
         {
-            [self startAnimating];
+            if ((offSetWithInsetY + 7) >= (CGRectGetHeight(self.bounds) + visibleOffSetY))
+            {
+                [self startAnimating];
+            }
+            else
+            {
+                [self.animator changeProgress:((offSetWithInsetY - visibleOffSetY) /
+                                               CGRectGetHeight(self.frame))];
+            }
         }
     }
 }
@@ -133,13 +141,9 @@
 - (CGFloat)heightForRefreshShow
 {
     CGFloat height = [self heightForContentViewInvisible];
-    if (height > 0)
+    if (height < 0)
     {
-        height = height - _scrollViewInsetsDefaultValue.top;
-    }
-    else
-    {
-        height = _scrollViewInsetsDefaultValue.top;
+        height = 0;
     }
     return height;
 }

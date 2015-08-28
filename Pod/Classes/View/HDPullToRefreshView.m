@@ -92,15 +92,22 @@
     {
         return;
     }
-    if (!scrollView.pullRefreshLoading && !scrollView.infiniteRefreshLoading)
+    if (!scrollView.pullRefreshLoading)
     {
         if (scrollView.isDragging)
         {
             [self.animator changeProgress:(-offSetWithInsets / CGRectGetHeight(self.bounds))];
         }
-        else if (offSetWithInsets <= (-CGRectGetHeight(self.bounds) + 7))
+        else
         {
-            [self startAnimating];
+            if (offSetWithInsets <= (-CGRectGetHeight(self.bounds) + 7))
+            {
+                [self startAnimating];
+            }
+            else
+            {
+                [self.animator changeProgress:(-offSetWithInsets / CGRectGetHeight(self.bounds))];
+            }
         }
     }
 }

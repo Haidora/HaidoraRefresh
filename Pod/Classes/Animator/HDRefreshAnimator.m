@@ -135,6 +135,14 @@
         CGFloat height = 30;
         self.arrowImage.frame = CGRectMake(55, (superHeight - height) / 2, height, height);
         [superView addSubview:self.arrowImage];
+        if (_position == HDRefreshViewPositionTop)
+        {
+            self.arrowImage.transform = CGAffineTransformIdentity;
+        }
+        else if (_position == HDRefreshViewPositionBottom)
+        {
+            self.arrowImage.transform = CGAffineTransformMakeRotation(M_PI);
+        }
     }
     if (self.activityView.superview == nil)
     {
