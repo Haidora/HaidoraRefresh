@@ -61,32 +61,16 @@
 - (void)startLoadingAnimation
 {
     self.titleLable.text = NSLocalizedStringFromTable(@"Loading...", HDRefreshBundleName, @"");
-    [UIView animateWithDuration:0.3
-        animations:^{
-          self.arrowImage.hidden = YES;
-          self.activityView.hidden = NO;
-        }
-        completion:^(BOOL finished) {
-          if (finished)
-          {
-              [self.activityView startAnimating];
-          }
-        }];
+    self.arrowImage.hidden = YES;
+    self.activityView.hidden = NO;
+    [self.activityView startAnimating];
 }
 
 - (void)stopLoadingAnimation
 {
-    [UIView animateWithDuration:0.3
-        animations:^{
-          self.arrowImage.hidden = NO;
-          self.activityView.hidden = YES;
-        }
-        completion:^(BOOL finished) {
-          if (finished)
-          {
-              [self.activityView stopAnimating];
-          }
-        }];
+    self.arrowImage.hidden = NO;
+    self.activityView.hidden = YES;
+    [self.activityView stopAnimating];
 }
 
 - (void)changeProgress:(CGFloat)progress
@@ -146,7 +130,6 @@
     }
     if (self.activityView.superview == nil)
     {
-        self.activityView.hidden = YES;
         self.activityView.frame = self.arrowImage.frame;
         [superView addSubview:self.activityView];
     }
