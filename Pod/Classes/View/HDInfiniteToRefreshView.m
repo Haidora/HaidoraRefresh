@@ -9,6 +9,14 @@
 #import "HDInfiniteToRefreshView.h"
 #import "UIScrollView+HDRefreshPrivate.h"
 
+typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState)
+{
+    HDInfiniteToRefreshStateNone = 0,
+    HDInfiniteToRefreshStateTriggering,
+    HDInfiniteToRefreshStateTriggered,
+    HDInfiniteToRefreshStateLoading,
+};
+
 //旋转的支持
 @interface HDInfiniteToRefreshView ()
 {
@@ -16,6 +24,8 @@
     UIEdgeInsets _scrollViewInsetsDefaultValue;
     UIScrollView *_scrollView;
 }
+
+@property (nonatomic, assign) HDInfiniteToRefreshState state;
 
 @end
 
@@ -28,6 +38,7 @@
     {
         self.backgroundColor = [UIColor clearColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.state = HDInfiniteToRefreshStateNone;
     }
     return self;
 }
@@ -112,27 +123,47 @@
     UIScrollView *superView = (UIScrollView *)self.superview;
     if (superView && !superView.infiniteRefreshLoading && !superView.pullRefreshLoading)
     {
-        CGFloat offSetWithInsetY = superView.contentOffset.y + _scrollViewInsetsDefaultValue.top;
-        CGFloat visibleOffSetY = [self heightForRefreshShow];
-        if (offSetWithInsetY < visibleOffSetY)
+        if (superView.frame.size.height > superView.contentSize.height)
         {
+            self.alpha = 0;
             return;
-        }
-        if (superView.isDragging)
-        {
-            [self.animator
-                changeProgress:((offSetWithInsetY - visibleOffSetY) / CGRectGetHeight(self.frame))];
         }
         else
         {
-            if ((offSetWithInsetY + 7) >= (CGRectGetHeight(self.bounds) + visibleOffSetY))
+            self.alpha = 1;
+        }
+        CGFloat offSetWithInsetY = superView.contentOffset.y + _scrollViewInsetsDefaultValue.top;
+        CGFloat visibleOffSetY = [self heightForRefreshShow];
+        if (offSetWithInsetY <= visibleOffSetY)
+        {
+            return;
+        }
+        CGFloat progress = ((offSetWithInsetY - visibleOffSetY) / CGRectGetHeight(self.frame));
+        if (HDInfiniteToRefreshStateNone == _state)
+        {
+            if (superView.isDragging)
+            {
+                [self.animator changeProgress:progress];
+                _state = HDInfiniteToRefreshStateTriggering;
+            }
+        }
+        else if (HDInfiniteToRefreshStateTriggering == _state)
+        {
+            if (progress > 1.0f)
+            {
+                _state = HDInfiniteToRefreshStateTriggered;
+            }
+        }
+        else if (HDInfiniteToRefreshStateTriggered == _state)
+        {
+            if ((offSetWithInsetY + 7) >= (CGRectGetHeight(self.bounds) + visibleOffSetY) &&
+                !superView.isDragging)
             {
                 [self startAnimating];
             }
             else
             {
-                [self.animator changeProgress:((offSetWithInsetY - visibleOffSetY) /
-                                               CGRectGetHeight(self.frame))];
+                [self.animator changeProgress:progress];
             }
         }
     }
@@ -172,6 +203,7 @@
     }
     UIEdgeInsets insets = scrollView.contentInset;
     insets.bottom = bottom;
+    self.state = HDInfiniteToRefreshStateLoading;
     [self.animator startLoadingAnimation];
     [UIView animateWithDuration:0.3
         animations:^{
@@ -188,7 +220,6 @@
 - (void)stopAnimating
 {
     UIScrollView *scrollView = (UIScrollView *)self.superview;
-    scrollView.infiniteRefreshLoading = NO;
     UIEdgeInsets insets = scrollView.contentInset;
     insets.bottom = _scrollViewInsetsDefaultValue.bottom;
     [self.animator stopLoadingAnimation];
@@ -200,6 +231,8 @@
           if (finished)
           {
               [self.animator changeProgress:0];
+              self.state = HDInfiniteToRefreshStateNone;
+              scrollView.infiniteRefreshLoading = NO;
           }
         }];
 }
