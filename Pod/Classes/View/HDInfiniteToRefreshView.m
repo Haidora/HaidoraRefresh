@@ -9,8 +9,7 @@
 #import "HDInfiniteToRefreshView.h"
 #import "UIScrollView+HDRefreshPrivate.h"
 
-typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState)
-{
+typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
     HDInfiniteToRefreshStateNone = 0,
     HDInfiniteToRefreshStateTriggering,
     HDInfiniteToRefreshStateTriggered,
@@ -79,7 +78,7 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState)
                         change:(NSDictionary *)change
                        context:(void *)context __attribute__((objc_requires_super))
 {
-    if (context == HDInfiniteToRefreshKVOContext)
+    if (context == (__bridge void *_Nullable)(HDInfiniteToRefreshKVOContext))
     {
         UIScrollView *scrollView = (UIScrollView *)self.superview;
         if (object == scrollView)
@@ -93,10 +92,6 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState)
                 [self adjustFrameWithContentSize];
             }
         }
-    }
-    else
-    {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 

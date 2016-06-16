@@ -21,13 +21,13 @@
 {
     [super viewDidLoad];
     __weak typeof(self) myself = self;
-    _count = 5;
+    _count = 15;
     self.tableView.tableFooterView = [[UIView alloc] init];
     [self.tableView addPullToRefreshWithActionHandler:^{
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                      dispatch_get_main_queue(), ^{
                        [myself.tableView stopPullRefresh];
-                       _count = 5;
+                       _count = 15;
                        [myself.tableView reloadData];
                        //                       myself.tableView.showPullRefreshView = NO;
 //                       myself.tableView.showInfiniteRefreshView = YES;

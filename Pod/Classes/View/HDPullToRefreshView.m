@@ -64,7 +64,7 @@
                         change:(NSDictionary *)change
                        context:(void *)context __attribute__((objc_requires_super))
 {
-    if (context == HDPullTORefreshKVOContext)
+    if (context == (__bridge void *_Nullable)(HDPullTORefreshKVOContext))
     {
         UIScrollView *scrollView = (UIScrollView *)self.superview;
         if ([keyPath isEqualToString:HDRefreshViewContentOffSetKeyPath] && object == scrollView)
@@ -75,10 +75,6 @@
                 [self adjustWithContentOffSetWith:scrollView];
             }
         }
-    }
-    else
-    {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 

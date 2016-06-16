@@ -6,12 +6,12 @@
 //
 //
 
+#import "HDInfiniteToRefreshView.h"
+#import "HDPullToRefreshView.h"
+#import "HDRefreshAnimator.h"
+#import "UIScrollView+HDRefreshPrivate.h"
 #import "UIScrollView+HDRefreshView.h"
 #import <objc/runtime.h>
-#import "HDPullToRefreshView.h"
-#import "HDInfiniteToRefreshView.h"
-#import "UIScrollView+HDRefreshPrivate.h"
-#import "HDRefreshAnimator.h"
 
 static char *kHaidoraPullToRefreshView = "kHaidoraPullToRefreshView";
 
@@ -101,8 +101,8 @@ static char *kHaidoraPullToRefreshView = "kHaidoraPullToRefreshView";
         {
             [self addObserver:self.pullToRefreshView
                    forKeyPath:HDRefreshViewContentOffSetKeyPath
-                      options:NSKeyValueObservingOptionInitial
-                      context:HDPullTORefreshKVOContext];
+                      options:NSKeyValueObservingOptionNew
+                      context:(__bridge void *_Nullable)(HDPullTORefreshKVOContext)];
             self.pullToRefreshView.isObserving = YES;
         }
     }
@@ -196,10 +196,10 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
         {
             [self removeObserver:self.infiniteToRefreshView
                       forKeyPath:HDRefreshViewContentOffSetKeyPath
-                         context:HDInfiniteToRefreshKVOContext];
+                         context:(__bridge void *_Nullable)(HDInfiniteToRefreshKVOContext)];
             [self removeObserver:self.infiniteToRefreshView
                       forKeyPath:HDRefreshViewContentSizeKeyPath
-                         context:HDInfiniteToRefreshKVOContext];
+                         context:(__bridge void *_Nullable)(HDInfiniteToRefreshKVOContext)];
             self.infiniteToRefreshView.isObserving = NO;
         }
     }
@@ -210,11 +210,11 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
             [self addObserver:self.infiniteToRefreshView
                    forKeyPath:HDRefreshViewContentOffSetKeyPath
                       options:NSKeyValueObservingOptionInitial
-                      context:HDInfiniteToRefreshKVOContext];
+                      context:(__bridge void *_Nullable)(HDInfiniteToRefreshKVOContext)];
             [self addObserver:self.infiniteToRefreshView
                    forKeyPath:HDRefreshViewContentSizeKeyPath
                       options:NSKeyValueObservingOptionInitial
-                      context:HDInfiniteToRefreshKVOContext];
+                      context:(__bridge void *_Nullable)(HDInfiniteToRefreshKVOContext)];
             self.infiniteToRefreshView.isObserving = YES;
         }
     }

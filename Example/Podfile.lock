@@ -1,5 +1,5 @@
 PODS:
-  - HaidoraRefresh (0.1.0)
+  - HaidoraRefresh (0.1.2)
 
 DEPENDENCIES:
   - HaidoraRefresh (from `../`)
@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  HaidoraRefresh: a22d82f80ac6b2ace739ca6af74f962a7179bed2
+  HaidoraRefresh: c8979953edda26e742c9d981c37ca730276f48a6
 
-COCOAPODS: 0.37.2
+COCOAPODS: 0.39.0
