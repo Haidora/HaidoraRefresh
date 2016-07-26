@@ -10,6 +10,9 @@
     [self.scrollView addPullToRefreshWithActionHandler:nil];
     //添加下拉刷新并设置自定义动画
     [self.scrollView addPullToRefreshWithActionHandler:nil animator:nil];
+    //适用于collectionView,添加代码
+     self.collectionView.alwaysBounceVertical = YES;
+
     
 ## Animator
 
