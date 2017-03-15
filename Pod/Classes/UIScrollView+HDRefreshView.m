@@ -116,6 +116,7 @@ static char *kHaidoraPullToRefreshView = "kHaidoraPullToRefreshView";
 @end
 
 static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
+static char *kHaidoraInfiniteRefreshViewAutoHidden = "kHaidoraInfiniteRefreshViewAutoHidden";
 
 @implementation UIScrollView (HDInfiniteRefreshView)
 
@@ -149,6 +150,7 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 {
     if (self.infiniteToRefreshView == nil)
     {
+        self.infiniteRefreshViewAutoHidden = YES;
         self.infiniteToRefreshView = refreshView;
         self.infiniteToRefreshView.animator = animator;
         self.infiniteToRefreshView.action = actionHandler;
@@ -175,6 +177,17 @@ static char *kHaidoraInfiniteToRefreshView = "kHaidoraInfiniteToRefreshView";
 
 #pragma mark
 #pragma mark Getter/Setter
+
+- (void)setInfiniteRefreshViewAutoHidden:(BOOL)infiniteRefreshViewAutoHidden
+{
+    objc_setAssociatedObject(self, kHaidoraInfiniteRefreshViewAutoHidden, @(infiniteRefreshViewAutoHidden),
+                             OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (BOOL)infiniteRefreshViewAutoHidden
+{
+    return [objc_getAssociatedObject(self, kHaidoraInfiniteRefreshViewAutoHidden) boolValue];
+}
 
 - (void)setInfiniteToRefreshView:(HDInfiniteToRefreshView *)infiniteToRefreshView
 {

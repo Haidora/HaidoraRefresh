@@ -8,6 +8,7 @@
 
 #import "HDInfiniteToRefreshView.h"
 #import "UIScrollView+HDRefreshPrivate.h"
+#import "UIScrollView+HDRefreshView.h"
 
 typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
     HDInfiniteToRefreshStateNone = 0,
@@ -118,7 +119,7 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
     UIScrollView *superView = (UIScrollView *)self.superview;
     if (superView && !superView.infiniteRefreshLoading && !superView.pullRefreshLoading)
     {
-        if (superView.frame.size.height > superView.contentSize.height)
+        if (superView.infiniteRefreshViewAutoHidden && (superView.frame.size.height > superView.contentSize.height))
         {
             self.alpha = 0;
             return;
