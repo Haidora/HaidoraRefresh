@@ -31,6 +31,13 @@
 
 @property (nonatomic, strong, readonly) HDInfiniteToRefreshView *infiniteToRefreshView;
 @property (nonatomic, assign) BOOL showInfiniteRefreshView;
+/**
+ The validity of 
+ `self.infiniteToRefreshView.alpha = (self.frame.size.height > self.contentSize.height) ? 0 : 1`
+ 
+ default is YES.
+ */
+@property (nonatomic, assign) BOOL infiniteRefreshViewAutoHidden;
 
 #pragma mark
 #pragma mark Infinite to Refresh

@@ -90,14 +90,16 @@
     }
     if (progress > 1)
     {
+        NSString *loadingString = (_position == HDRefreshViewPositionTop) ? @"Release to refresh..." : @"Release to loading...";
         self.titleLable.text =
-            NSLocalizedStringFromTable(@"Release to Refresh...", HDRefreshBundleName, @"");
+            NSLocalizedStringFromTable(loadingString, HDRefreshBundleName, @"");
         transform = transformRefresh;
     }
     else
     {
+        NSString *loadingString =  (_position == HDRefreshViewPositionTop) ? @"Pull to refresh..." : @"Pull up loading...";
         self.titleLable.text =
-            NSLocalizedStringFromTable(@"Pull to Refresh...", HDRefreshBundleName, @"");
+            NSLocalizedStringFromTable(loadingString, HDRefreshBundleName, @"");
         transform = transformPull;
     }
     [UIView animateWithDuration:0.3
