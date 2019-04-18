@@ -90,6 +90,7 @@
     }
     if (progress > 1)
     {
+        self.titleLable.superview.hidden = NO;
         NSString *loadingString = (_position == HDRefreshViewPositionTop) ? @"Release to refresh..." : @"Release to loading...";
         self.titleLable.text =
             NSLocalizedStringFromTable(loadingString, HDRefreshBundleName, @"");
@@ -97,6 +98,7 @@
     }
     else
     {
+        self.titleLable.superview.hidden = YES;
         NSString *loadingString =  (_position == HDRefreshViewPositionTop) ? @"Pull to refresh..." : @"Pull up loading...";
         self.titleLable.text =
             NSLocalizedStringFromTable(loadingString, HDRefreshBundleName, @"");
