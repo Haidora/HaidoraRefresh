@@ -85,7 +85,7 @@ static char *kHaidoraPullToRefreshView = "kHaidoraPullToRefreshView";
 
 - (void)setShowPullRefreshView:(BOOL)showPullRefreshView
 {
-    self.pullToRefreshView.hidden = showPullRefreshView;
+    self.pullToRefreshView.hidden = !showPullRefreshView;
     if (!showPullRefreshView)
     {
         if (self.pullToRefreshView.isObserving)
