@@ -10,7 +10,7 @@
 #import "UIScrollView+HDRefreshPrivate.h"
 #import "UIScrollView+HDRefreshView.h"
 
-typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
+typedef NS_ENUM (NSUInteger, HDInfiniteToRefreshState) {
     HDInfiniteToRefreshStateNone = 0,
     HDInfiniteToRefreshStateTriggering,
     HDInfiniteToRefreshStateTriggered,
@@ -34,8 +34,7 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self)
-    {
+    if (self) {
         self.backgroundColor = [UIColor clearColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.state = HDInfiniteToRefreshStateNone;
@@ -52,20 +51,15 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
 - (void)willMoveToSuperview:(UIView *)newSuperview __attribute__((objc_requires_super))
 {
     [super willMoveToSuperview:newSuperview];
-    if (newSuperview != nil && [newSuperview isKindOfClass:[UIScrollView class]])
-    {
+    if (newSuperview != nil && [newSuperview isKindOfClass:[UIScrollView class]]) {
         _scrollViewInsetsDefaultValue = ((UIScrollView *)newSuperview).contentInset;
         _scrollView = (UIScrollView *)newSuperview;
-    }
-    else if (newSuperview == nil && [self.superview isKindOfClass:[UIScrollView class]])
-    {
+    } else if (newSuperview == nil && [self.superview isKindOfClass:[UIScrollView class]]) {
         // https://github.com/samvermette/SVPullToRefresh/blob/master/SVPullToRefresh/UIScrollView%2BSVPullToRefresh.m#L196
         // use self.superview, not self.scrollView. Why self.scrollView == nil here?
         UIScrollView *scrollView = (UIScrollView *)self.superview;
-        if (YES)
-        {
-            if (self.isObserving)
-            {
+        if (YES) {
+            if (self.isObserving) {
                 [scrollView removeObserver:self forKeyPath:HDRefreshViewContentOffSetKeyPath];
                 [scrollView removeObserver:self forKeyPath:HDRefreshViewContentSizeKeyPath];
                 self.isObserving = NO;
@@ -79,17 +73,13 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
                         change:(NSDictionary *)change
                        context:(void *)context __attribute__((objc_requires_super))
 {
-    if (context == (__bridge void *_Nullable)(HDInfiniteToRefreshKVOContext))
-    {
+    if (context == (__bridge void *_Nullable)(HDInfiniteToRefreshKVOContext)) {
         UIScrollView *scrollView = (UIScrollView *)self.superview;
-        if (object == scrollView)
-        {
-            if ([keyPath isEqualToString:HDRefreshViewContentOffSetKeyPath])
-            {
+        if (object == scrollView) {
+            if ([keyPath isEqualToString:HDRefreshViewContentOffSetKeyPath]) {
                 [self adjustStateWithContentOffset];
             }
-            if ([keyPath isEqualToString:HDRefreshViewContentSizeKeyPath])
-            {
+            if ([keyPath isEqualToString:HDRefreshViewContentSizeKeyPath]) {
                 [self adjustFrameWithContentSize];
             }
         }
@@ -102,12 +92,13 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
 - (void)adjustFrameWithContentSize
 {
     UIScrollView *superView = (UIScrollView *)self.superview;
-    if (superView)
-    {
-        CGFloat contentHeight = superView.contentSize.height;
+    if (superView) {
+        CGFloat contentHeight = superView.contentSize.height +
+            _scrollViewInsetsDefaultValue.top +
+            _scrollViewInsetsDefaultValue.bottom;
         CGFloat scrollHeight = CGRectGetHeight(superView.bounds) -
-                               _scrollViewInsetsDefaultValue.top -
-                               _scrollViewInsetsDefaultValue.bottom;
+            _scrollViewInsetsDefaultValue.top -
+            _scrollViewInsetsDefaultValue.bottom;
         CGRect frame = self.frame;
         frame.origin.y = MAX(contentHeight, scrollHeight);
         self.frame = frame;
@@ -117,48 +108,33 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
 - (void)adjustStateWithContentOffset
 {
     UIScrollView *superView = (UIScrollView *)self.superview;
-    if (superView && !superView.infiniteRefreshLoading && !superView.pullRefreshLoading)
-    {
-        if (superView.infiniteRefreshViewAutoHidden && (superView.frame.size.height > superView.contentSize.height))
-        {
+    if (superView && !superView.infiniteRefreshLoading && !superView.pullRefreshLoading) {
+        if (superView.infiniteRefreshViewAutoHidden && (superView.frame.size.height > superView.contentSize.height)) {
             self.alpha = 0;
             return;
-        }
-        else
-        {
+        } else {
             self.alpha = 1;
         }
         CGFloat offSetWithInsetY = superView.contentOffset.y + _scrollViewInsetsDefaultValue.top;
         CGFloat visibleOffSetY = [self heightForRefreshShow];
-        if (offSetWithInsetY <= visibleOffSetY)
-        {
+        if (offSetWithInsetY <= visibleOffSetY) {
             return;
         }
         CGFloat progress = ((offSetWithInsetY - visibleOffSetY) / CGRectGetHeight(self.frame));
-        if (HDInfiniteToRefreshStateNone == _state)
-        {
-            if (superView.isDragging)
-            {
+        if (HDInfiniteToRefreshStateNone == _state) {
+            if (superView.isDragging) {
                 [self.animator changeProgress:progress];
                 _state = HDInfiniteToRefreshStateTriggering;
             }
-        }
-        else if (HDInfiniteToRefreshStateTriggering == _state)
-        {
-            if (progress > 1.0f)
-            {
+        } else if (HDInfiniteToRefreshStateTriggering == _state) {
+            if (progress > 1.0f) {
                 _state = HDInfiniteToRefreshStateTriggered;
             }
-        }
-        else if (HDInfiniteToRefreshStateTriggered == _state)
-        {
+        } else if (HDInfiniteToRefreshStateTriggered == _state) {
             if ((offSetWithInsetY + 7) >= (CGRectGetHeight(self.bounds) + visibleOffSetY) &&
-                !superView.isDragging)
-            {
+                !superView.isDragging) {
                 [self startAnimating];
-            }
-            else
-            {
+            } else {
                 [self.animator changeProgress:progress];
             }
         }
@@ -168,8 +144,7 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
 - (CGFloat)heightForRefreshShow
 {
     CGFloat height = [self heightForContentViewInvisible];
-    if (height < 0)
-    {
+    if (height < 0) {
         height = 0;
     }
     return height;
@@ -179,7 +154,7 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
 {
     CGFloat height = 0;
     height = CGRectGetHeight(_scrollView.frame) - _scrollViewInsetsDefaultValue.top -
-             _scrollViewInsetsDefaultValue.bottom;
+        _scrollViewInsetsDefaultValue.bottom;
     height = _scrollView.contentSize.height - height;
     return height;
 }
@@ -193,8 +168,7 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
     scrollView.infiniteRefreshLoading = YES;
     CGFloat bottom = CGRectGetHeight(self.bounds) + _scrollViewInsetsDefaultValue.bottom;
     CGFloat deltaH = [self heightForContentViewInvisible];
-    if (deltaH < 0)
-    {
+    if (deltaH < 0) {
         bottom -= deltaH;
     }
     UIEdgeInsets insets = scrollView.contentInset;
@@ -202,15 +176,14 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
     self.state = HDInfiniteToRefreshStateLoading;
     [self.animator startLoadingAnimation];
     [UIView animateWithDuration:0.3
-        animations:^{
-          scrollView.contentInset = insets;
+                     animations:^{
+        scrollView.contentInset = insets;
+    }
+                     completion:^(BOOL finished) {
+        if (self.action) {
+            self.action();
         }
-        completion:^(BOOL finished) {
-          if (self.action)
-          {
-              self.action();
-          }
-        }];
+    }];
 }
 
 - (void)stopAnimating
@@ -220,17 +193,16 @@ typedef NS_ENUM(NSUInteger, HDInfiniteToRefreshState) {
     insets.bottom = _scrollViewInsetsDefaultValue.bottom;
     [self.animator stopLoadingAnimation];
     [UIView animateWithDuration:0.3
-        animations:^{
-          scrollView.contentInset = insets;
+                     animations:^{
+        scrollView.contentInset = insets;
+    }
+                     completion:^(BOOL finished) {
+        if (finished) {
+            [self.animator changeProgress:0];
+            self.state = HDInfiniteToRefreshStateNone;
+            scrollView.infiniteRefreshLoading = NO;
         }
-        completion:^(BOOL finished) {
-          if (finished)
-          {
-              [self.animator changeProgress:0];
-              self.state = HDInfiniteToRefreshStateNone;
-              scrollView.infiniteRefreshLoading = NO;
-          }
-        }];
+    }];
 }
 
 @end
